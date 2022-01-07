@@ -1,0 +1,20 @@
+# permissions for end users to view suites.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: suite-viewer-role
+rules:
+- apiGroups:
+  - testing.tsgpragc.com
+  resources:
+  - suites
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - testing.tsgpragc.com
+  resources:
+  - suites/status
+  verbs:
+  - get

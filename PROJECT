@@ -1,0 +1,16 @@
+domain: tsgpragc.com
+layout:
+- go.kubebuilder.io/v3
+projectName: orcatester
+repo: github.com/Pragmatics/orcatester
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: tsgpragc.com
+  group: testing
+  kind: Suite
+  path: github.com/Pragmatics/orcatester/api/v1
+  version: v1
+version: "3"

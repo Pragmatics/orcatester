@@ -1,0 +1,60 @@
+apiVersion: testing.tsgpragc.com/v1
+kind: Suite
+metadata:
+  name: service-tests
+spec:
+  capacity: 3
+  tests:
+    - name: "zap-test"
+      maxRetries: 2
+      runInIsolation: true
+      tektonPipelineRunYaml: |
+        spec:
+          serviceAccountName: build-bot
+          pipelineRef:
+            name: zap-test
+          workspaces:
+            - name: helm
+              volumeClaimTemplate:
+                metadata:
+                  name: temporary
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 2Gi
+          podTemplate:
+            securityContext:
+              runAsUser: 65532
+              runAsGroup: 2000
+              fsGroup: 2000
+          params:
+            - name: "image_tag"
+              value: "latest"
+    - name: "cypress-test"
+      maxRetries: 1
+      tektonPipelineRunYaml: |
+        spec:
+          serviceAccountName: build-bot
+          pipelineRef:
+            name: cypress-test
+          workspaces:
+            - name: helm
+              volumeClaimTemplate:
+                metadata:
+                  name: temporary
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 2Gi
+          podTemplate:
+            securityContext:
+              runAsUser: 65532
+              runAsGroup: 2000
+              fsGroup: 2000
+          params:
+            - name: "image_tag"
+              value: "latest"
