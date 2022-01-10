@@ -1,4 +1,4 @@
-# orcatester
+![Alt text](docs/Logo.png?raw=true "Orcatester")
 
 Kubernetes operator that executes tests by creating Tekton pipelineruns.
 
