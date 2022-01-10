@@ -1,0 +1,36 @@
+name: integration-tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Cache Go Dependencies
+      uses: actions/cache@v2
+      env:
+        cache-name: orcatester-go-deps
+      with:
+        path: ~/go/pkg/mod
+        key: go-${{ hashFiles('**/go.sum') }}
+
+    - name: Get Go Dependencies
+      run: go get .
+
+    - name: Get Test Dependencies
+      run: make get-dependencies
+
+    - name: Run Integration Tests
+      run: make test
