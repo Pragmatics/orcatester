@@ -115,7 +115,7 @@ func (r *SuiteReconciler) startNextPipelineJob(ctx context.Context, suite *testi
 		maxJobs = suite.Spec.Capacity
 	}
 
-	if currentlyRunning == maxJobs {
+	if currentlyRunning >= maxJobs {
 		return
 	}
 
