@@ -27,7 +27,13 @@ jobs:
         key: go-${{ hashFiles('**/go.sum') }}
 
     - name: Get Go Dependencies
-      run: go get .
+      run: go mod download
+
+    - name: Checkstyle
+      run: "OUTPUT=$(go fmt ./...); if [ ! -z ${OUTPUT} ] ; then echo 'ERROR: file(s) failed golang formatting rules'; echo ${OUTPUT}; exit 1; fi"
+
+    - name: Vet
+      run: go vet ./...
 
     - name: Get Test Dependencies
       run: make get-dependencies

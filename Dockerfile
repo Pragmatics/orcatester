@@ -2,10 +2,6 @@ FROM golang:1.17.3@sha256:6556ce40115451e40d6afbc12658567906c9250b0fda250302dffb
 
 WORKDIR /tmp/source
 
-# Test dependencies
-COPY Makefile Makefile
-RUN bash -c "make get-dependencies"
-
 # Copy the Go Modules manifests
 COPY go.mod go.mod
 COPY go.sum go.sum
@@ -14,16 +10,10 @@ COPY go.sum go.sum
 RUN go mod download
 
 # Copy the go source
-COPY hack/ hack/
 COPY main.go main.go
 COPY api/ api/
 COPY controllers/ controllers/
 COPY config/ config/
-
-# Tests
-RUN OUTPUT=$(go fmt ./...); if [ ! -z ${OUTPUT} ] ; then echo "ERROR: file(s) failed golang formatting rules"; echo ${OUTPUT}; exit 1; fi
-RUN go vet ./...
-RUN make test
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o manager main.go
