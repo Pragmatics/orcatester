@@ -94,7 +94,7 @@ The below example is for a release tagged 1.0.0
 git clone https://github.com/Pragmatics/orcatester
 git checkout 1.0.0
 make install
-make deploy IMG=TODO
+make deploy IMG=pragmatics/orcatester:1.0.0
 ```
 
 ## Contributing
