@@ -32,6 +32,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// total wait time = waitIntervals * waitIntervalPeriod
+const waitIntervals = 16
+const waitIntervalPeriod = 250 * time.Millisecond
+
 func BenchmarkSuiteStatusOneHundredTests(b *testing.B) {
 	var testCount = 100
 	var tests = make([]testingv1.TestSpec, testCount)
@@ -394,11 +398,10 @@ func updatePipelineStatus(t *testing.T, status v1.ConditionStatus, run *v1beta1.
 }
 
 func findPipelineRunByPrefixAndSuffix(t *testing.T, suiteName string, prefix string, suffix string) v1beta1.PipelineRun {
-	var interval = time.Millisecond * 250
 	var runs v1beta1.PipelineRunList
 	var result v1beta1.PipelineRun
 	var failMessage = "Could not find pipelinerun with prefix: " + prefix + "and suffix: " + suffix
-	eventuallyTrue(t, 8, interval, failMessage, func() bool {
+	eventuallyTrue(t, waitIntervals, waitIntervalPeriod, failMessage, func() bool {
 		err := k8sClient.List(context.Background(), &runs, client.MatchingLabels{"testSuite": suiteName})
 		if err != nil {
 			return false
@@ -415,10 +418,9 @@ func findPipelineRunByPrefixAndSuffix(t *testing.T, suiteName string, prefix str
 }
 
 func assertTestCount(t *testing.T, suiteName string, count int) {
-	var interval = time.Millisecond * 250
 	var runs v1beta1.PipelineRunList
 	var failMessage = suiteName + " never had a test count of: " + strconv.Itoa(count)
-	eventuallyTrue(t, 8, interval, failMessage, func() bool {
+	eventuallyTrue(t, waitIntervals, waitIntervalPeriod, failMessage, func() bool {
 		err := k8sClient.List(context.Background(), &runs, client.MatchingLabels{"testSuite": suiteName})
 		if err != nil {
 			return false
@@ -428,10 +430,9 @@ func assertTestCount(t *testing.T, suiteName string, count int) {
 }
 
 func assertSuiteStatus(t *testing.T, suiteName string, suiteStatus string) {
-	var interval = time.Millisecond * 250
 	var suite testingv1.Suite
 	var failMessage = suiteName + " never updated to status: " + suiteStatus
-	eventuallyTrue(t, 8, interval, failMessage, func() bool {
+	eventuallyTrue(t, waitIntervals, waitIntervalPeriod, failMessage, func() bool {
 		err := k8sClient.Get(context.Background(), client.ObjectKey{
 			Namespace: "tekton-pipelines",
 			Name:      suiteName,
