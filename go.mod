@@ -5,8 +5,8 @@ go 1.17
 require (
 	github.com/stretchr/testify v1.7.1
 	github.com/tektoncd/pipeline v0.33.0
-	k8s.io/api v0.23.4
-	k8s.io/apimachinery v0.23.4
+	k8s.io/api v0.23.5
+	k8s.io/apimachinery v0.23.5
 	k8s.io/client-go v0.23.4
 	knative.dev/pkg v0.0.0-20220131144930-f4b57aef0006
 	sigs.k8s.io/controller-runtime v0.11.1
